@@ -1,4 +1,15 @@
-const livros = [
+/**
+ * @typedef {object} Book
+ * @property {string} nome - O nome do livro da Bíblia.
+ * @property {number} capitulos - O número total de capítulos no livro.
+ * @property {number} versiculos - O número total de versículos no livro.
+ */
+
+/**
+ * Um array de objetos, onde cada objeto representa um livro da Bíblia.
+ * @type {Book[]}
+ */
+export const books = [
     { nome: 'Gênesis', capitulos: 50, versiculos: 1533 },
     { nome: 'Êxodo', capitulos: 40, versiculos: 1213 },
     { nome: 'Levítico', capitulos: 27, versiculos: 859 },
@@ -66,77 +77,3 @@ const livros = [
     { nome: 'Judas', capitulos: 1, versiculos: 25 },
     { nome: 'Apocalipse', capitulos: 22, versiculos: 404 }
 ];
-
-const tabelaLivros = document.getElementById('tabela-livros');
-const percentualLido = document.getElementById('percentual-lido');
-const capitulosLidos = document.getElementById('capitulos-lidos');
-const versiculosLidos = document.getElementById('versiculos-lidos');
-
-let totalCapitulos = 0;
-let totalVersiculos = 0;
-let capitulosLidosCount = 0;
-let versiculosLidosCount = 0;
-
-livros.forEach(livro => {
-    totalCapitulos += livro.capitulos;
-    totalVersiculos += livro.versiculos;
-
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>${livro.nome}</td>
-        <td>${livro.capitulos}</td>
-        <td>${livro.versiculos}</td>
-        <td><input type="checkbox" class="checkbox-lido" data-capitulos="${livro.capitulos}" data-versiculos="${livro.versiculos}"></td>
-    `;
-    tabelaLivros.appendChild(row);
-});
-
-document.querySelectorAll('.checkbox-lido').forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-        const capitulos = parseInt(checkbox.getAttribute('data-capitulos'));
-        const versiculos = parseInt(checkbox.getAttribute('data-versiculos'));
-
-        if (checkbox.checked) {
-            capitulosLidosCount += capitulos;
-            versiculosLidosCount += versiculos;
-        } else {
-            capitulosLidosCount -= capitulos;
-            versiculosLidosCount -= versiculos;
-        }
-
-        const percentual = (capitulosLidosCount / totalCapitulos) * 100;
-        percentualLido.textContent = `${percentual.toFixed(2)}%`;
-        capitulosLidos.textContent = capitulosLidosCount;
-        versiculosLidos.textContent = versiculosLidosCount;
-
-        salvarProgresso();
-    });
-});
-
-function salvarProgresso() {
-    const progresso = {
-        capitulosLidos: capitulosLidosCount,
-        versiculosLidos: versiculosLidosCount,
-        checkboxes: Array.from(document.querySelectorAll('.checkbox-lido')).map(checkbox => checkbox.checked)
-    };
-    localStorage.setItem('progressoLeitura', JSON.stringify(progresso));
-}
-
-function carregarProgresso() {
-    const progresso = JSON.parse(localStorage.getItem('progressoLeitura'));
-    if (progresso) {
-        capitulosLidosCount = progresso.capitulosLidos;
-        versiculosLidosCount = progresso.versiculosLidos;
-        percentualLido.textContent = `${(capitulosLidosCount / totalCapitulos * 100).toFixed(2)}%`;
-        capitulosLidos.textContent = capitulosLidosCount;
-        versiculosLidos.textContent = versiculosLidosCount;
-
-        const checkboxes = document.querySelectorAll('.checkbox-lido');
-        progresso.checkboxes.forEach((checked, index) => {
-            checkboxes[index].checked = checked;
-        });
-    }
-}
-
-// Carregar o progresso ao carregar a página
-window.onload = carregarProgresso;
