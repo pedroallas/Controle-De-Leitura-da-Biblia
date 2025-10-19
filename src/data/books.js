@@ -1,3 +1,14 @@
+/**
+ * @typedef {object} Book
+ * @property {string} nome - O nome do livro da Bíblia.
+ * @property {number} capitulos - O número total de capítulos no livro.
+ * @property {number} versiculos - O número total de versículos no livro.
+ */
+
+/**
+ * Um array de objetos, onde cada objeto representa um livro da Bíblia.
+ * @type {Book[]}
+ */
 export const books = [
     { nome: 'Gênesis', capitulos: 50, versiculos: 1533 },
     { nome: 'Êxodo', capitulos: 40, versiculos: 1213 },
